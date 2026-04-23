@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detective Interactive Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Interactive Detective Game</h1>
+        <nav>
+            <ul>
+                <li><a href="#crime-scene">Crime Scene</a></li>
+                <li><a href="#interrogation">Interrogation</a></li>
+                <li><a href="#evidence-analysis">Evidence Analysis</a></li>
+                <li><a href="#motive-search">Motive Search</a></li>
+                <li><a href="#case-resolution">Case Resolution</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="crime-scene">
+            <h2>Crime Scene</h2>
+            <p>Welcome to the crime scene. What do you want to investigate?</p>
+            <button onclick="investigate('footprints')">Investigate Footprints</button>
+            <button onclick="investigate('weapon')">Examine Weapon</button>
+        </section>
+        <section id="interrogation">
+            <h2>Interrogation</h2>
+            <p>Choose a suspect to interrogate:</p>
+            <button onclick="interrogate('suspect1')">Suspect 1</button>
+            <button onclick="interrogate('suspect2')">Suspect 2</button>
+        </section>
+        <section id="evidence-analysis">
+            <h2>Evidence Analysis</h2>
+            <p>Analyze the collected evidence.</p>
+            <button onclick="analyze('DNA')">Analyze DNA Sample</button>
+            <button onclick="analyze('fingerprints')">Check Fingerprints</button>
+        </section>
+        <section id="motive-search">
+            <h2>Motive Search</h2>
+            <p>Find motives behind the crime.</p>
+            <button onclick="searchMotive('suspect1')">Investigate Suspect 1's Motive</button>
+            <button onclick="searchMotive('suspect2')">Investigate Suspect 2's Motive</button>
+        </section>
+        <section id="case-resolution">
+            <h2>Case Resolution</h2>
+            <p>Draw your conclusions!</p>
+            <button onclick="resolveCase('suspect1')">Accuse Suspect 1</button>
+            <button onclick="resolveCase('suspect2')">Accuse Suspect 2</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 Detective Interactive Game</p>
+    </footer>
+    <script>
+        function investigate(item) {
+            alert('Investigating ' + item + '...');
+            // Additional investigation logic here
+        }
+
+        function interrogate(suspect) {
+            alert('Interrogating ' + suspect + '...');
+            // Additional interrogation logic here
+        }
+
+        function analyze(evidence) {
+            alert('Analyzing ' + evidence + '...');
+            // Additional analysis logic here
+        }
+
+        function searchMotive(suspect) {
+            alert('Searching motive for ' + suspect + '...');
+            // Additional motive searching logic here
+        }
+
+        function resolveCase(suspect) {
+            alert('Resolving case against ' + suspect + '...');
+            // Additional resolution logic here
+        }
+    </script>
+</body>
+</html>
