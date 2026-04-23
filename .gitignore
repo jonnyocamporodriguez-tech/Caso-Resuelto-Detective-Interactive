@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# VS Code settings
+.vscode/
+
+# IntelliJ IDEA settings
+.idea/
+
+# Environment files
+.env
+
+# Distribution folders
+/dist/
+/build/
+
+# Logs
+logs/
+
+# Other common files to ignore
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.cache
+*.compass
+*.out
+*.sublime-workspace
+*.sublime-project
+/coverage/
