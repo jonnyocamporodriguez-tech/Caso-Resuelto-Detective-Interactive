@@ -1,0 +1,73 @@
+.welcome-page {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    transition: background-color 0.3s;
+}
+
+.welcome-page h1 {
+    font-size: 3rem;
+    animation: fadeIn 1s;
+}
+
+.welcome-page p {
+    font-size: 1.5rem;
+    animation: slideIn 1s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.game-page {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.game-page h1 {
+    font-size: 2.5rem;
+}
+
+.game-page button {
+    background-color: #ff5722;
+    color: #ffffff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.game-page button:hover {
+    background-color: #e64a19;
+}
+
+@media (max-width: 768px) {
+    .welcome-page h1 {
+        font-size: 2.5rem;
+    }
+    .welcome-page p {
+        font-size: 1rem;
+    }
+    .game-page h1 {
+        font-size: 2rem;
+    }
+}
