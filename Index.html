@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso Clasificado: Asesinato en la Mansión Morales</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- CSS Externo -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-950">
+
+    <!-- PANTALLA DE BIENVENIDA -->
+    <div id="screen-welcome" class="fixed inset-0 flex flex-col items-center justify-center z-[100] welcome-bg">
+        <div class="text-center">
+            <h1 class="text-6xl md:text-8xl font-bold uppercase mb-4 tracking-tighter drop-shadow-2xl">
+                <span class="text-yellow-500"></span><br>
+            </h1>
+            <p class="text-red-500 tracking-[0.4em] text-xs font-bold mb-10 uppercase drop-shadow-lg">
+                Saga Completa: 5 Temporadas
+            </p>
+            <button onclick="startLoading()" 
+                class="bg-yellow-600 hover:bg-yellow-500 text-black px-12 py-4 font-bold text-2xl transition-all uppercase stencil shadow-2xl">
+                INICIAR INVESTIGACIÓN
+            </button>
+            <button onclick="startPreview()" 
+                class="bg-yellow-600 hover:bg-yellow-500 text-black px-12 py-4 font-bold text-2xl transition-all mt-4 stencil shadow-2xl">
+                VISTA PREVIA
+            </button>
+        </div>
+    </div>
+
+    <!-- CARGA -->
+    <div id="screen-loading" class="fixed inset-0 bg-[#020617] z-[110] hidden flex flex-col items-center justify-center">
+        <h2 class="text-yellow-500 tracking-[0.5em] uppercase stencil mb-6">
+            ACCEDIENDO A ARCHIVOS...
+        </h2>
+        <div class="w-64 h-1 bg-slate-900 overflow-hidden">
+            <div id="progressBar" class="h-full bg-yellow-600 w-0 transition-all duration-100"></div>
+        </div>
+    </div>
+
+    <!-- VISTA PREVIA - PANTALLA COMPLETA SOLO -->
+    <div id="screen-preview" class="hidden fixed inset-0 h-screen w-screen flex flex-col relative z-[200] bg-slate-950">
+        
+        <div id="previewPoliceLights" class="police-lights">
+            <div class="gobo gobo-red"></div>
+            <div class="gobo gobo-blue"></div>
+        </div>
+
+        <header class="h-16 bg-black/90 border-b border-white/5 flex justify-between items-center px-6 z-30">
+            <div class="flex items-center space-x-6">
+                <button onclick="closePreview()" class="text-3xl hover:text-yellow-500 hover:scale-110 transition-transform font-bold">✕</button>
+                <div>
+                    <p class="text-[10px] text-red-600 font-bold uppercase tracking-widest">
+                        VISTA PREVIA - DEMOSTRACIÓN
+                    </p>
+                    <p class="text-xs text-white uppercase font-bold tracking-tight">
+                        Descubre los inicios de cada temporada
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2 text-[10px] font-bold">
+                    <span class="rec-blink text-red-600">●</span>
+                    <span class="text-slate-400 uppercase tracking-tighter">UDH PREVIEW</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 relative overflow-hidden flex flex-col bg-gradient-to-b from-slate-900 via-slate-950 to-black">
+            <div class="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+                <span class="text-white text-9xl font-black stencil opacity-10">UDH</span>
+            </div>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <div class="flex-1 flex items-end relative z-10">
+                <div id="previewDialogBox" class="w-full p-8 md:px-16 md:py-10">
+                    <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 items-start">
+                        <div id="previewCharAvatar" class="w-32 h-32 bg-black border border-white/10 p-1 rounded flex-shrink-0">
+                            <img src="" id="previewAvatarImg" class="w-full h-full object-cover opacity-80">
+                        </div>
+
+                        <div class="flex-1 w-full">
+                            <div class="flex justify-between items-end mb-4 border-b border-white/5 pb-2">
+                                <h4 id="previewCharName" class="text-yellow-500 font-bold text-2xl uppercase stencil tracking-tighter">
+                                    INSPECTOR GÓMEZ
+                                </h4>
+                                <span id="previewSceneInfo" class="text-[10px] text-slate-500 font-bold">
+                                    TEMPORADA 01
+                                </span>
+                            </div>
+
+                            <p id="previewCharSpeech" class="text-lg md:text-xl text-slate-100 leading-relaxed font-medium h-24 overflow-y-auto custom-scrollbar">
+                                ...
+                            </p>
+
+                            <div class="mt-8 flex justify-between items-center">
+                                <div class="flex gap-4">
+                                    <button id="previewPrevBtn" onclick="previewPrev()" 
+                                        class="bg-slate-800/50 hover:bg-slate-700 text-white px-8 py-2 text-xs font-bold uppercase stencil disabled:opacity-20 transition-all">
+                                        ◀ ANTERIOR
+                                    </button>
+                                    <button id="previewNextBtn" onclick="previewNext()" 
+                                        class="bg-yellow-600 hover:bg-yellow-500 text-black px-10 py-2 text-xs font-bold uppercase stencil shadow-lg transition-all">
+                                        SIGUIENTE ▶
+                                    </button>
+                                </div>
+                                <span id="previewCounter" class="hidden md:block text-[9px] text-slate-600 uppercase tracking-widest font-bold">
+                                    Fragmento 1 de 5
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL DE INFORMACIÓN - PANTALLA COMPLETA -->
+            <div class="bg-gradient-to-r from-black/95 via-black/90 to-black/95 border-t border-white/10 px-6 py-8 backdrop-blur-sm flex-grow flex items-center relative z-10">
+                <div class="w-full max-w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-[11px]">
+                    <!-- Información sobre el caso -->
+                    <div class="border-l-4 border-yellow-500 pl-6">
+                        <p class="text-yellow-500 font-bold uppercase tracking-wider mb-4 text-lg">📋 SOBRE EL CASO</p>
+                        <p class="text-slate-300 leading-relaxed text-base">
+                            Explora los cinco actos de la saga completa. Cada fragmento te muestra el comienzo de una temporada diferente con personajes intrigantes, pistas misteriosas y revelaciones que te atraparán en la trama del asesinato en la mansión Morales.
+                        </p>
+                        <p class="text-slate-400 mt-4 italic">Descubre quién es realmente la voz misteriosa...</p>
+                    </div>
+
+                    <!-- Atajos de teclado -->
+                    <div class="border-l-4 border-red-500 pl-6">
+                        <p class="text-red-500 font-bold uppercase tracking-wider mb-4 text-lg">⌨️ ATAJOS DE TECLADO</p>
+                        <ul class="text-slate-300 space-y-3 text-base">
+                            <li class="flex items-center gap-3">
+                                <span class="bg-red-500/20 text-red-400 px-3 py-1 rounded text-sm font-bold">[ESPACIO]</span>
+                                <span>Siguiente fragmento</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded text-sm font-bold">[← FLECHA]</span>
+                                <span>Anterior fragmento</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="bg-purple-500/20 text-purple-400 px-3 py-1 rounded text-sm font-bold">[ESC]</span>
+                                <span>Cerrar vista previa</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Consejos -->
+                    <div class="border-l-4 border-blue-500 pl-6">
+                        <p class="text-blue-500 font-bold uppercase tracking-wider mb-4 text-lg">💡 CONSEJOS PARA JUGADORES</p>
+                        <ul class="text-slate-300 space-y-2 text-base">
+                            <li class="flex items-start gap-3">
+                                <span class="text-yellow-400 font-bold mt-1">→</span>
+                                <span>Presta atención a los personajes clave y sus motivaciones</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-yellow-400 font-bold mt-1">→</span>
+                                <span>Cada temporada revela nuevas pistas cruciales</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-yellow-400 font-bold mt-1">→</span>
+                                <span>¿La voz misteriosa es aliada o enemiga? ¡Descúbrelo!</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ESTRUCTURA DEL JUEGO -->
+    <div id="screen-game" class="hidden h-screen flex flex-col relative">
+        
+        <div id="policeLights" class="police-lights">
+            <div class="gobo gobo-red"></div>
+            <div class="gobo gobo-blue"></div>
+        </div>
+
+        <!-- MENÚ HAMBURGUESA -->
+        <div id="gameMenu" class="hidden fixed inset-0 z-[150] bg-black/80 backdrop-blur-sm">
+            <div class="fixed left-0 top-0 h-screen w-64 bg-black border-r border-white/10 flex flex-col z-[160] shadow-2xl">
+                <!-- Header del menú -->
+                <div class="h-16 bg-black/90 border-b border-white/5 flex items-center justify-between px-6">
+                    <p class="text-yellow-500 font-bold uppercase stencil text-lg">MENÚ</p>
+                    <button onclick="toggleMenu()" class="text-2xl hover:text-yellow-500 transition-colors">✕</button>
+                </div>
+
+                <!-- VISTA PRINCIPAL - Temporadas -->
+                <nav id="temporadasSection" class="flex-1 overflow-y-auto py-6 px-4">
+                    <div class="space-y-4">
+                        <!-- Ir a Temporada -->
+                        <div>
+                            <p class="text-yellow-500 font-bold uppercase text-xs tracking-wider mb-3 px-4">Ir a Temporada</p>
+                            <div class="space-y-2">
+                                <button onclick="goToSeason(1)" 
+                                    class="w-full text-left px-4 py-2 rounded hover:bg-slate-700 transition-all text-slate-300 text-sm hover:text-yellow-400">
+                                    Temporada 1: La Sangre del Patriarca
+                                </button>
+                                <button onclick="goToSeason(2)" 
+                                    class="w-full text-left px-4 py-2 rounded hover:bg-slate-700 transition-all text-slate-300 text-sm hover:text-yellow-400">
+                                    Temporada 2: Nuevas Pistas
+                                </button>
+                                <button onclick="goToSeason(3)" 
+                                    class="w-full text-left px-4 py-2 rounded hover:bg-slate-700 transition-all text-slate-300 text-sm hover:text-yellow-400">
+                                    Temporada 3: Secretos Oscuros
+                                </button>
+                                <button onclick="goToSeason(4)" 
+                                    class="w-full text-left px-4 py-2 rounded hover:bg-slate-700 transition-all text-slate-300 text-sm hover:text-yellow-400">
+                                    Temporada 4: La Verdad Emerge
+                                </button>
+                                <button onclick="goToSeason(5)" 
+                                    class="w-full text-left px-4 py-2 rounded hover:bg-slate-700 transition-all text-slate-300 text-sm hover:text-yellow-400">
+                                    Temporada 5: El Final
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Botón Configuración -->
+                        <div class="pt-4 border-t border-white/10">
+                            <button onclick="toggleSettings()" 
+                                class="w-full px-4 py-3 rounded-lg bg-red-600/20 hover:bg-red-600/40 text-red-400 hover:text-red-300 transition-all border border-red-500/50 hover:border-red-400 uppercase text-sm font-bold tracking-wider flex items-center justify-between">
+                                ⚙️ Configuración
+                                <span class="text-lg">→</span>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- VISTA CONFIGURACIÓN -->
+                <nav id="settingsPanel" class="hidden flex-1 overflow-y-auto py-6 px-4">
+                    <div class="space-y-4">
+                        <!-- Botón Atrás -->
+                        <button onclick="backToMain()" 
+                            class="w-full px-4 py-3 rounded-lg bg-yellow-600/20 hover:bg-yellow-600/40 text-yellow-400 hover:text-yellow-300 transition-all border border-yellow-500/50 hover:border-yellow-400 uppercase text-sm font-bold tracking-wider flex items-center justify-between mb-4">
+                            <span class="text-lg">←</span>
+                            Atrás
+                        </button>
+
+                        <p class="text-red-500 font-bold uppercase text-xs tracking-wider mb-3 px-4">Opciones Rápidas</p>
+
+                        <!-- Volver al Inicio -->
+                        <button onclick="goToWelcome()" 
+                            class="w-full text-left px-4 py-3 rounded-lg hover:bg-yellow-600/20 hover:text-yellow-500 transition-all border border-transparent hover:border-yellow-500/50 uppercase text-sm font-bold tracking-wider text-slate-300">
+                            🏠 Volver a Inicio
+                        </button>
+
+                        <!-- Reiniciar Juego -->
+                        <button onclick="restartGame()" 
+                            class="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-600/20 hover:text-blue-400 transition-all border border-transparent hover:border-blue-500/50 uppercase text-sm font-bold tracking-wider text-slate-300">
+                            🔄 Reiniciar Juego
+                        </button>
+
+                        <!-- Audio -->
+                        <div class="pt-4 border-t border-white/10">
+                            <p class="text-slate-400 font-bold uppercase text-xs tracking-wider mb-3 px-4">Audio y Accesibilidad</p>
+                            
+                            <button onclick="toggleMusic()" 
+                                class="w-full text-left px-4 py-2 rounded hover:bg-slate-700 transition-all text-slate-300 text-sm hover:text-yellow-400 flex items-center justify-between">
+                                <span>🔊 Sonido</span>
+                                <span class="text-xs bg-slate-700 px-2 py-1 rounded">ON</span> 
+                            </button>
+                            
+                            <button onclick="toggleSubtitles()" 
+                                class="w-full text-left px-4 py-2 rounded hover:bg-slate-700 transition-all text-slate-300 text-sm hover:text-yellow-400 mt-2 flex items-center justify-between">
+                                <span>📝 Subtítulos</span>
+                                <span class="text-xs bg-slate-700 px-2 py-1 rounded">ON</span>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Footer del menú -->
+                <div class="border-t border-white/10 p-4">
+                    <p class="text-[10px] text-slate-500 text-center uppercase tracking-wider">
+                        Caso Clasificado v1.0<br>
+                        UDH - Unidad De Homicidios
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <header class="h-16 bg-black/90 border-b border-white/5 flex justify-between items-center px-6 z-30">
+            <div class="flex items-center space-x-6">
+                <button onclick="toggleMenu()" class="text-2xl hover:text-yellow-500 transition-colors">☰</button>
+                <div class="hidden md:block">
+                    <p id="seasonInfo" class="text-[10px] text-red-600 font-bold uppercase tracking-widest">
+                        TEMPORADA 1
+                    </p>
+                    <p id="chapterInfo" class="text-xs text-white uppercase font-bold tracking-tight">
+                        C. 1: LA SANGRE DEL PATRIARCA
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2 text-[10px] font-bold">
+                    <span class="rec-blink text-red-600">●</span>
+                    <span class="text-slate-400 uppercase tracking-tighter">UDH LIVE FEED</span>
+                </div>
+                <button onclick="togglePatrol()" 
+                    class="bg-yellow-600/10 text-yellow-500 border border-yellow-500/20 text-[10px] px-4 py-1 uppercase stencil hover:bg-yellow-600 hover:text-black transition-all">
+                    Luces de Escena
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 relative overflow-hidden flex items-end">
+            <div class="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+                <span class="text-white text-9xl font-black stencil opacity-10">UDH</span>
+            </div>
+
+            <div id="dialogBox" class="w-full p-8 md:px-16 md:py-10">
+                <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 items-start">
+                    <div id="charAvatar" class="w-32 h-32 bg-black border border-white/10 p-1 rounded flex-shrink-0">
+                        <img src="" id="avatarImg" class="w-full h-full object-cover opacity-80">
+                    </div>
+
+                    <div class="flex-1 w-full">
+                        <div class="flex justify-between items-end mb-4 border-b border-white/5 pb-2">
+                            <h4 id="charName" class="text-yellow-500 font-bold text-2xl uppercase stencil tracking-tighter">
+                            </h4>
+                            <span id="sceneInfo" class="text-[10px] text-slate-500 font-bold">
+                                SCENE_ID: 01-01
+                            </span>
+                        </div>
+
+                        <p id="charSpeech" class="text-lg md:text-xl text-slate-100 leading-relaxed font-medium h-24 overflow-y-auto custom-scrollbar">
+                            ...
+                        </p>
+
+                        <div class="mt-8 flex justify-between items-center">
+                            <div class="flex gap-4">
+                                <button id="prevBtn" onclick="prevScene()" 
+                                    class="bg-slate-800/50 hover:bg-slate-700 text-white px-8 py-2 text-xs font-bold uppercase stencil disabled:opacity-20 transition-all">
+                                    ATRÁS
+                                </button>
+                                <button id="nextBtn" onclick="nextScene()" 
+                                    class="bg-yellow-600 hover:bg-yellow-500 text-black px-10 py-2 text-xs font-bold uppercase stencil shadow-lg transition-all">
+                                    CONTINUAR
+                                </button>
+                            </div>
+                            <span class="hidden md:block text-[9px] text-slate-600 uppercase tracking-widest font-bold">
+                                atajo: Pulse la tecla [ESPACIO] para avanzar
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Externo -->
+    <script src="script.js"></script>
+    <script src="loader.js"></script>
+    <script src="personajes.js"></script>
+    <script src="preview.js"></script>
+    <script src="sounds.js"></script>
+</body>
+</html>
